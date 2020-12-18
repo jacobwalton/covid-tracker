@@ -22,9 +22,6 @@ body {
   flex: 0.9;
 }
 
-.appRight {
-}
-
 .App {
   display: flex;
   justify-content: space-evenly;
