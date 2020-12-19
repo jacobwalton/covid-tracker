@@ -10,6 +10,7 @@ import {
   MenuItem,
   Select,
   FormControl,
+  FormControlLabel,
   Card,
   CardContent,
   Switch,
@@ -87,17 +88,23 @@ function App() {
     <div className="App">
       <div className="appLeft">
         <div className="header">
-          <Switch onClick={() => setDarkMode(!darkMode)}> DARK MODE </Switch>
+          <FormControlLabel
+            className="darkSwitch"
+            label="Dark Mode"
+            control={<Switch onClick={() => setDarkMode(!darkMode)} />}
+          ></FormControlLabel>
+
           <h1>COVID-19 Tracker</h1>
           <FormControl className="Dropdown">
             <Select
-              variant="outlined"
+              className="Dropdown"
+              variant="standard"
               value={country}
               onChange={onCountrySelect}
             >
               <MenuItem value="worldwide">Worldwide</MenuItem>
               {countries.map((country) => (
-                <MenuItem value={country.value}>{country.name}</MenuItem>
+                <MenuItem className="Dropdown" value={country.value}>{country.name}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -105,14 +112,16 @@ function App() {
 
         <div className="Stats">
           <InfoBox
+          className="infoBox"
             onClick={(e) => setCasesType("cases")}
-            title="Coronavirus Cases"
+            title="Cases"
             isRed
             active={casesType === "cases"}
             cases={prettyPrintStat(countryInfo.todayCases)}
             total={numeral(countryInfo.cases).format("0.0a")}
           />
           <InfoBox
+          className="infoBox"
             onClick={(e) => setCasesType("recovered")}
             title="Recovered"
             active={casesType === "recovered"}
@@ -120,6 +129,7 @@ function App() {
             total={numeral(countryInfo.recovered).format("0.0a")}
           />
           <InfoBox
+          className="infoBox"
             onClick={(e) => setCasesType("deaths")}
             title="Deaths"
             isRed
@@ -143,7 +153,7 @@ function App() {
           <br />
           <h3>Worldwide new {casesType}</h3>
         </CardContent>
-        <LineGraph casesType={casesType} />
+        <LineGraph casesType = {casesType} />
       </Card>
     </div>
   );

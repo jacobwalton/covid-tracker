@@ -24,6 +24,9 @@ const options = {
   scales: {
     xAxes: [
       {
+        ticks:{
+          fontColor:'#ccc'
+        },
         type: "time",
         time: {
           format: "MM/DD/YY",
@@ -37,6 +40,7 @@ const options = {
           display: false,
         },
         ticks: {
+          fontColor:'#ccc',
           callback: function (value, index, values) {
             return numeral(value).format("0a");
           },
@@ -45,7 +49,7 @@ const options = {
     ],
   },
 };
-const buildChart = (data, casesType = "cases") => {
+const buildChart = (data, casesType) => {
   let chartData = [];
   let lastDataPoint;
   for (let date in data.cases) {
@@ -57,12 +61,12 @@ const buildChart = (data, casesType = "cases") => {
       };
       chartData.push(newDataPoint);
     }
-    lastDataPoint = data[casesType][date];
+    lastDataPoint = data[casesType] [date];
   }
   return chartData;
 };
 
-function LineGraph({ casesType = "cases" }) {
+function LineGraph({ casesType }) {
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -72,10 +76,11 @@ function LineGraph({ casesType = "cases" }) {
           return response.json();
         })
         .then((data) => {
-          let chartData = buildChart(data, "cases");
+          let chartData = buildChart(data, casesType);
           setData(chartData);
         });
     };
+
     fetchData();
   }, [casesType]);
 
@@ -83,6 +88,7 @@ function LineGraph({ casesType = "cases" }) {
     <div>
       {data?.length > 0 && (
         <Line
+        className="Graph"
           options={options}
           data={{
             datasets: [

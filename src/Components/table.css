@@ -9,6 +9,15 @@
   background-color: #f3f2f8;
 }
 
+.dark tr {
+  background-color: rgb(118, 110, 126);
+  color: white;
+}
+
+.dark .table tr:nth-last-of-type(odd) {
+  background-color: rgb(100, 87, 110);
+}
+
 .table tr {
   display: flex;
   justify-content: space-between;

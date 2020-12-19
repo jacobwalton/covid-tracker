@@ -1,6 +1,39 @@
 * {
   margin: 0;
 }
+.Dropdown {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgb(235, 231, 231);
+}
+
+.dark .infoBox {
+  background-color: rgb(150, 140, 160);
+  color: white;
+}
+
+.dark .darkSwitch {
+  color: rgb(150, 140, 160);
+}
+.dark {
+  background-color: rgb(7, 6, 44);
+}
+
+.dark h1 {
+  color: rgb(228, 224, 231);
+}
+
+.dark .appRight {
+  background-color: rgb(118, 110, 126);
+}
+
+.dark h3 {
+  color: white;
+}
+
+.dark .Dropdown {
+  background-color: rgb(225, 219, 231);
+}
 
 body {
   background-color: #f5f6fa;
