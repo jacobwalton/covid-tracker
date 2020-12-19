@@ -2,37 +2,38 @@ import React, { useState, useEffect } from "react";
 import InfoBox from "./Components/InfoBox";
 import Map from "./Components/Map";
 import Table from "./Components/Table";
-import { sortData, prettyPrintStat } from './util';
+import { sortData, prettyPrintStat } from "./util";
 import numeral from "numeral";
-import LineGraph from './Components/LineGraph'
+import LineGraph from "./Components/LineGraph";
 import "leaflet/dist/leaflet.css";
 import {
   MenuItem,
   Select,
   FormControl,
   Card,
-  CardContent
+  CardContent,
+  Switch,
 } from "@material-ui/core";
 import "./App.css";
 
-
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
   const [countries, setCountries] = useState([]);
   const [country, setInputCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
-  const [tableData, setTableData] = useState([])
+  const [tableData, setTableData] = useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796 });
   const [mapZoom, setMapZoom] = useState(3);
-  const [mapCountries, setMapCountries] = useState([])
+  const [mapCountries, setMapCountries] = useState([]);
   const [casesType, setCasesType] = useState("cases");
 
-  useEffect(()=>{
-    fetch('https://disease.sh/v3/covid-19/all')
-    .then(response => response.json())
-    .then(data => {
-      setCountryInfo(data);
-    })
-  }, [])
+  useEffect(() => {
+    fetch("https://disease.sh/v3/covid-19/all")
+      .then((response) => response.json())
+      .then((data) => {
+        setCountryInfo(data);
+      });
+  }, []);
   useEffect(() => {
     const getCountryData = async () => {
       await fetch("https://disease.sh/v3/covid-19/countries")
@@ -42,21 +43,26 @@ function App() {
             name: country.country,
             value: country.countryInfo.iso2,
           }));
-          let sortedData = sortData(data)
+          let sortedData = sortData(data);
 
           setTableData(sortedData);
-          setMapCountries(data)
+          setMapCountries(data);
           setCountries(countries);
         });
     };
     getCountryData();
   }, []);
 
+  useEffect(() => {
+    darkMode
+      ? document.body.classList.add("dark")
+      : document.body.classList.remove("dark");
+  }, [darkMode]);
+
   const onCountrySelect = async (event) => {
     const countryCode = event.target.value;
 
-
-      const url =
+    const url =
       countryCode === "worldwide"
         ? "https://disease.sh/v3/covid-19/all"
         : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
@@ -65,21 +71,23 @@ function App() {
       .then((data) => {
         setInputCountry(countryCode);
         setCountryInfo(data);
-        if(countryCode === "worldwide") {
-          setMapCenter({lat : 34.80746, lng: -40.4796});
-        }
-        else {
-          setMapCenter({lat : data.countryInfo.lat, lng : data.countryInfo.long});
+        if (countryCode === "worldwide") {
+          setMapCenter({ lat: 34.80746, lng: -40.4796 });
+        } else {
+          setMapCenter({
+            lat: data.countryInfo.lat,
+            lng: data.countryInfo.long,
+          });
         }
         setMapZoom(4);
       });
-
   };
 
   return (
     <div className="App">
       <div className="appLeft">
         <div className="header">
+          <Switch onClick={() => setDarkMode(!darkMode)}> DARK MODE </Switch>
           <h1>COVID-19 Tracker</h1>
           <FormControl className="Dropdown">
             <Select
@@ -122,20 +130,20 @@ function App() {
         </div>
 
         <Map
-        casesType={casesType}
-        countries={mapCountries}
-        center={mapCenter}
-        zoom={mapZoom}/>
+          casesType={casesType}
+          countries={mapCountries}
+          center={mapCenter}
+          zoom={mapZoom}
+        />
       </div>
       <Card className="appRight">
         <CardContent>
           <h3>Live cases by country</h3>
-          <Table countries={tableData}/>
-          <br/>
+          <Table countries={tableData} />
+          <br />
           <h3>Worldwide new {casesType}</h3>
-          
         </CardContent>
-        <LineGraph casesType={casesType}/>
+        <LineGraph casesType={casesType} />
       </Card>
     </div>
   );
